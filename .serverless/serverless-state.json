@@ -1,0 +1,75 @@
+{
+  "service": {
+    "service": "demo-website",
+    "serviceObject": {
+      "name": "demo-website"
+    },
+    "provider": {
+      "stage": "test",
+      "region": "eu-central-1",
+      "variableSyntax": "\\${([ ~:a-zA-Z0-9._'\",\\-\\/\\(\\)]+?)}",
+      "name": "aws",
+      "runtime": "nodejs8.10",
+      "deploymentBucket": "eubfr-test-deploy",
+      "stackTags": {
+        "ENV": "test"
+      },
+      "environment": {
+        "REACT_APP_STAGE": "test",
+        "REACT_APP_ES_PUBLIC_ENDPOINT": {
+          "Fn::ImportValue": "test:resources-elasticsearch:PublicEndpoint"
+        }
+      },
+      "deploymentBucketObject": {
+        "name": "eubfr-test-deploy"
+      },
+      "versionFunctions": true,
+      "remoteFunctionData": null,
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "DeployBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketName": "eubfr-test-demo-website"
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": "eubfr-test-deploy"
+          }
+        }
+      }
+    },
+    "custom": {
+      "client": {
+        "bucketName": "eubfr-test-demo-website",
+        "distributionFolder": "build"
+      },
+      "eubfrEnvironment": "test"
+    },
+    "plugins": [
+      "serverless-finch",
+      "serverless-export-env"
+    ],
+    "pluginsData": {},
+    "functions": {},
+    "resources": {
+      "Resources": {
+        "DeployBucket": {
+          "Type": "AWS::S3::Bucket",
+          "Properties": {
+            "BucketName": "eubfr-test-demo-website"
+          }
+        }
+      },
+      "Outputs": {}
+    }
+  },
+  "package": {
+    "artifactDirectoryName": "serverless/demo-website/test/1539261258205-2018-10-11T12:34:18.205Z",
+    "artifact": ""
+  }
+}

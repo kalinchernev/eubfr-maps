@@ -1,0 +1,17 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The AWS CloudFormation template for this Serverless application",
+  "Resources": {
+    "DeployBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "eubfr-test-demo-website"
+      }
+    }
+  },
+  "Outputs": {
+    "ServerlessDeploymentBucketName": {
+      "Value": "eubfr-test-deploy"
+    }
+  }
+}
