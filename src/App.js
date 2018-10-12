@@ -3,7 +3,7 @@ import "@ecl/ec-preset-website/dist/styles/ecl-ec-preset-website.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-import Map from "./components/Map";
+import Map from "./components/Map/Map";
 
 import "./App.css";
 
