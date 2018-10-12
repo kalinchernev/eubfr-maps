@@ -3,36 +3,19 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./Map.css";
 
-const URL =
-  "https://search-test-public-ip4o6f4o6ziykrbjm4kdpyosfu.eu-central-1.es.amazonaws.com/test-projects/_search";
+import getData from "../utils/getData";
 
-const TOKEN =
-  "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
+const { REACT_APP_TOKEN } = process.env;
 
 class Map extends React.Component {
   componentDidMount() {
-    const fn_getBB = () => {
-      let bb = this.map.getBounds();
-
-      return [
-        {
-          lat: bb.getNorth(),
-          lon: bb.getWest()
-        },
-        {
-          lat: bb.getSouth(),
-          lon: bb.getEast()
-        }
-      ];
-    };
-
     // create map
     this.map = L.map("map", {
       center: [50, 10],
       zoom: 5,
       layers: [
         L.tileLayer(
-          `https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${TOKEN}`,
+          `https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${REACT_APP_TOKEN}`,
           {
             attribution:
               '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -44,109 +27,11 @@ class Map extends React.Component {
 
     this.markerGroup = L.layerGroup().addTo(this.map);
 
-    this.map.on("moveend", () => fn_fetch());
+    this.map.on("moveend", () =>
+      getData({ map: this.map, markerGroup: this.markerGroup })
+    );
 
-    const fn_fetch = () => {
-      let bb = fn_getBB();
-      this.markerGroup.clearLayers();
-
-      fetch(URL, {
-        method: "POST",
-        body: JSON.stringify({
-          size: 0,
-          aggregations: {
-            locations: {
-              nested: {
-                path: "project_locations"
-              },
-              aggregations: {
-                filtered: {
-                  filter: {
-                    geo_bounding_box: {
-                      "project_locations.centroid": {
-                        top_left: bb[0],
-                        bottom_right: bb[1]
-                      }
-                    }
-                  },
-                  aggregations: {
-                    countries: {
-                      geohash_grid: {
-                        size: 500,
-                        field: "project_locations.centroid",
-                        precision: this.map.getZoom() - 2
-                      },
-                      aggregations: {
-                        centroid: {
-                          geo_centroid: {
-                            field: "project_locations.centroid"
-                          }
-                        },
-                        info: {
-                          reverse_nested: {},
-                          aggregations: {
-                            place: {
-                              top_hits: {
-                                size: 1,
-                                sort: [
-                                  {
-                                    last_modified: {
-                                      order: "desc"
-                                    }
-                                  }
-                                ],
-                                _source: {
-                                  includes: ["title", "description"]
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }),
-        headers: {
-          Accept: "application/json, text/plain, */*",
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => res.json())
-        .then(data =>
-          data.aggregations.locations.filtered.countries.buckets.map(m => {
-            let options = {};
-            if (m.centroid.count > 1) {
-              options = {
-                icon: new L.DivIcon({
-                  className: "aggregation-marker",
-                  html: `<span class="aggregation-marker__span--cluster">
-              ${m.centroid.count}
-              </span>`
-                })
-              };
-            } else {
-              options = {
-                icon: new L.DivIcon({
-                  className: "aggregation-marker",
-                  html: `<span class="aggregation-marker__span--single">
-              <img src="https://xrpcharts.ripple.com/assets/icons/icn_info.svg"/>
-              </span>`
-                }),
-                title: m.info.place.hits.hits[0]._source.title
-              };
-            }
-
-            L.marker(m.centroid.location, options).addTo(this.markerGroup);
-          })
-        )
-        .catch(error => console.error("Error:", error));
-    };
-
-    fn_fetch();
+    getData({ map: this.map, markerGroup: this.markerGroup });
   }
   render() {
     return (
