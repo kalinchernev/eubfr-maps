@@ -3,21 +3,20 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./Map.css";
 
-import getData from "../../utils/getData";
+import updateMapData from "../../utils/updateMapData";
 import MapConfig from "./MapConfig";
 
 class Map extends React.Component {
   componentDidMount() {
     // create map
     this.map = L.map("map", MapConfig);
-
     this.markerGroup = L.layerGroup().addTo(this.map);
 
     this.map.on("moveend", () =>
-      getData({ map: this.map, markerGroup: this.markerGroup })
+      updateMapData({ map: this.map, markerGroup: this.markerGroup })
     );
 
-    getData({ map: this.map, markerGroup: this.markerGroup });
+    updateMapData({ map: this.map, markerGroup: this.markerGroup });
   }
 
   render() {
