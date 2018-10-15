@@ -18,11 +18,7 @@ const getData = options => {
     }
   })
     .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      visualizeData({ data, markerGroup });
-    })
-
+    .then(data => visualizeData({ data, markerGroup }))
     .catch(error => console.error("Error:", error));
 };
 

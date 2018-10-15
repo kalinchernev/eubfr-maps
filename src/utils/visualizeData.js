@@ -1,14 +1,14 @@
 import L from "leaflet";
 
 const visualizeData = ({ data, markerGroup }) => {
-  data.aggregations.locations.filtered.countries.buckets.map(m => {
+  data.aggregations.locations.country.locations.buckets.forEach(bucket => {
     let options = {};
-    if (m.centroid.count > 1) {
+    if (bucket.centroid.count > 1) {
       options = {
         icon: new L.DivIcon({
           className: "aggregation-marker",
           html: `<span class="aggregation-marker__span--cluster">
-      ${m.centroid.count}
+      ${bucket.centroid.count}
       </span>`
         })
       };
@@ -20,11 +20,11 @@ const visualizeData = ({ data, markerGroup }) => {
       <img src="https://xrpcharts.ripple.com/assets/icons/icn_info.svg"/>
       </span>`
         }),
-        title: m.info.place.hits.hits[0]._source.title
+        title: bucket.info.place.hits.hits[0]._source.title
       };
     }
 
-    L.marker(m.centroid.location, options).addTo(markerGroup);
+    L.marker(bucket.centroid.location, options).addTo(markerGroup);
   });
 };
 
