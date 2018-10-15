@@ -1,7 +1,7 @@
 import getPolygonPointsByCountry from "./getPolygonPointsByCountry";
 
-const getQuery = map => {
-  const points = getPolygonPointsByCountry("BGR");
+const getQuery = ({ country, map }) => {
+  const points = getPolygonPointsByCountry(country);
 
   return {
     aggs: {

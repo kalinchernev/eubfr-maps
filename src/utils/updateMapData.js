@@ -4,10 +4,10 @@ import visualizeData from "./visualizeData";
 const { REACT_APP_ES_PUBLIC_ENDPOINT } = process.env;
 
 const getData = options => {
-  const { map, markerGroup } = options;
+  const { map, markerGroup, country } = options;
   markerGroup.clearLayers();
 
-  const query = getQuery(map);
+  const query = getQuery({ country, map });
 
   fetch(REACT_APP_ES_PUBLIC_ENDPOINT, {
     method: "POST",

@@ -3,26 +3,49 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./Map.css";
 
+import codes from "../../utils/countryCodes";
 import updateMapData from "../../utils/updateMapData";
 import MapConfig from "./MapConfig";
 
 class Map extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.map = {};
+    this.state = { country: "BEL" };
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    const country = event.target.value;
+
+    this.setState({ country });
+
+    updateMapData({ country, map: this.map, markerGroup: this.markerGroup });
+  }
+
   componentDidMount() {
+    const { country } = this.state;
+
     // create map
     this.map = L.map("map", MapConfig);
     this.markerGroup = L.layerGroup().addTo(this.map);
 
-    this.map.on("moveend", () =>
-      updateMapData({ map: this.map, markerGroup: this.markerGroup })
-    );
+    this.map.on("moveend", () => {
+      const { country } = this.state;
+      updateMapData({ country, map: this.map, markerGroup: this.markerGroup });
+    });
 
-    updateMapData({ map: this.map, markerGroup: this.markerGroup });
+    updateMapData({ country, map: this.map, markerGroup: this.markerGroup });
   }
 
   render() {
+    const { country } = this.state;
+
     return (
       <Fragment>
-        {/* <form
+        <form
           id="filters"
           className="ecl-form"
           style={{ marginBottom: "40px" }}
@@ -35,24 +58,23 @@ class Map extends React.Component {
                 Countries
               </label>
             </div>
-            <select className="ecl-select" id="countries" name="countries">
-              <option value="All" selected="selected">
-                - Any -
-              </option>
-              <option value="AT">Austria</option>
-              <option value="PL">Poland</option>
-              <option value="BE">Belgium</option>
-              <option value="BG">Bulgaria</option>
-              <option value="EE">Estonia</option>
-              <option value="FR">France</option>
-              <option value="DE">Germany</option>
-              <option value="EL">Greece</option>
-              <option value="HU">Hungary</option>
-              <option value="IT">Italy</option>
-              <option value="RO">Romania</option>
+            <select
+              onChange={this.handleChange}
+              value={country}
+              className="ecl-select"
+              id="countries"
+              name="countries"
+            >
+              {codes.map((code, key) => {
+                return (
+                  <option key={key} value={code}>
+                    {code}
+                  </option>
+                );
+              })}
             </select>
           </fieldset>
-        </form> */}
+        </form>
         <div
           id="map"
           style={{ width: "60vw", height: "60vh", marginBottom: "40px" }}
