@@ -22,22 +22,20 @@ class Map extends React.Component {
   render() {
     return (
       <Fragment>
-        <form
+        {/* <form
           id="filters"
           className="ecl-form"
           style={{ marginBottom: "40px" }}
         >
-          <fieldset class="ecl-fieldset">
-            <legend class="ecl-form-legend ecl-form-legend--level-1">
-              Search
-            </legend>
+          <fieldset className="ecl-fieldset">
+            <legend className="ecl-form-legend">Search</legend>
 
-            <div class="ecl-form-group">
-              <label class="ecl-form-label" for="countries">
+            <div className="ecl-form-group">
+              <label className="ecl-form-label" htmlFor="countries">
                 Countries
               </label>
             </div>
-            <select class="ecl-select" id="countries" name="countries">
+            <select className="ecl-select" id="countries" name="countries">
               <option value="All" selected="selected">
                 - Any -
               </option>
@@ -54,7 +52,7 @@ class Map extends React.Component {
               <option value="RO">Romania</option>
             </select>
           </fieldset>
-        </form>
+        </form> */}
         <div
           id="map"
           style={{ width: "60vw", height: "60vh", marginBottom: "40px" }}
