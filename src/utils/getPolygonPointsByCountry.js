@@ -1,14 +1,18 @@
+const countries = require("./countries.geo.json");
+
 const getPolygonPointsByCountry = countryCode => {
   let points = [];
 
-  if (countryCode === "BG") {
-    points = [
-      { lat: 42.4321019, lon: 23.318168 },
-      { lat: 43.2656884, lon: 24.7776861 },
-      { lat: 41.9251227, lon: 25.484723 },
-      { lat: 41.79467, lon: 23.8687763 }
-    ];
-  }
+  const data = countries.features.find(feature => feature.id === countryCode);
+
+  const { coordinates } = data.geometry;
+
+  points = coordinates[0]
+    ? coordinates[0].map(point => {
+        const [lon, lat] = point;
+        return { lat, lon };
+      })
+    : [];
 
   return points;
 };
