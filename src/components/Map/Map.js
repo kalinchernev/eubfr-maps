@@ -12,7 +12,7 @@ class Map extends React.Component {
     super(props);
 
     this.map = {};
-    this.state = { country: "BEL" };
+    this.state = { country: "FRA" };
 
     this.handleChange = this.handleChange.bind(this);
   }

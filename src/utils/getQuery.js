@@ -1,7 +1,37 @@
-import getPolygonPointsByCountry from "./getPolygonPointsByCountry";
+import getGeoShapeByCountry from "./getGeoShapeByCountry";
 
 const getQuery = ({ country, map }) => {
-  const points = getPolygonPointsByCountry(country);
+  const shape = getGeoShapeByCountry(country);
+
+  // The filter for the query.
+  let filter = {};
+
+  switch (shape.shape) {
+    case "Polygon": {
+      filter = {
+        geo_polygon: {
+          "project_locations.centroid": { points: shape.coordinates }
+        }
+      };
+
+      break;
+    }
+    case "MultiPolygon": {
+      filter = {
+        geo_shape: {
+          "project_locations.location": {
+            shape: {
+              type: "multipolygon",
+              coordinates: shape.coordinates
+            },
+            relation: "within"
+          }
+        }
+      };
+
+      break;
+    }
+  }
 
   return {
     aggs: {
@@ -11,11 +41,7 @@ const getQuery = ({ country, map }) => {
         },
         aggs: {
           country: {
-            filter: {
-              geo_polygon: {
-                "project_locations.centroid": { points }
-              }
-            },
+            filter,
             aggs: {
               locations: {
                 geohash_grid: {
