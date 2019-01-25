@@ -12,7 +12,7 @@ class Map extends React.Component {
     super(props);
 
     this.map = {};
-    this.state = { country: "FRA" };
+    this.state = { country: "DEU" };
 
     this.handleChange = this.handleChange.bind(this);
   }
@@ -32,12 +32,12 @@ class Map extends React.Component {
     this.map = L.map("map", MapConfig);
     this.markerGroup = L.layerGroup().addTo(this.map);
 
+    updateMapData({ country, map: this.map, markerGroup: this.markerGroup });
+
     this.map.on("moveend", () => {
       const { country } = this.state;
       updateMapData({ country, map: this.map, markerGroup: this.markerGroup });
     });
-
-    updateMapData({ country, map: this.map, markerGroup: this.markerGroup });
   }
 
   render() {

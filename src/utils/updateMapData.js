@@ -9,6 +9,9 @@ const getData = options => {
 
   const query = getQuery({ country, map });
 
+  console.log("Query:");
+  console.log(query);
+
   fetch(REACT_APP_ES_PUBLIC_ENDPOINT, {
     method: "POST",
     body: JSON.stringify(query),
@@ -19,6 +22,8 @@ const getData = options => {
   })
     .then(res => res.json())
     .then(data => {
+      console.log("Results:");
+      console.log(data);
       visualizeData({ data, markerGroup });
     })
     .catch(error => console.error("Error:", error));

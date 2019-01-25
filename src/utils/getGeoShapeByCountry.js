@@ -18,12 +18,13 @@ const getGeoShapeByCountry = countryCode => {
     case "Polygon": {
       const { coordinates } = data.geometry;
 
-      const coords = coordinates[0]
-        ? coordinates[0].map(point => {
-            const [lon, lat] = point;
-            return { lat, lon };
-          })
-        : [];
+      const coords =
+        coordinates && coordinates[0]
+          ? coordinates[0].map(point => {
+              const [lon, lat] = point;
+              return { lat, lon };
+            })
+          : [];
 
       delete data.geometry.coordinates;
       data.geometry.coordinates = coords;
